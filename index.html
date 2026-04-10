@@ -849,7 +849,7 @@
         allThemes.push(theme);
 
         const card = document.createElement("div");
-        card.classList.add("theme-item");
+        card.className = "theme-item"; // ⛔ WAJIB INI
         // SEARCH FIX FINAL
 setTimeout(() => {
   const searchInput = document.getElementById("searchInput");
