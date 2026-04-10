@@ -840,7 +840,8 @@
     try {
       const response = await fetch(nextPageUrl);
       const result = await response.json();
-      const themes = result.data?.data || [];
+      const themes = result.data.data || [];
+      console.log("THEMES:", themes);
 
       nextPageUrl = result.data?.next_page_url || null;
       if (nextPageUrl) nextPageUrl = nextPageUrl.replace("http:", "https:");
@@ -849,7 +850,7 @@
         allThemes.push(theme);
 
         const card = document.createElement("div");
-        card.className = "theme-item"; // ⛔ WAJIB INI
+card.className = "theme-item";
         // SEARCH FIX FINAL
 setTimeout(() => {
   const searchInput = document.getElementById("searchInput");
