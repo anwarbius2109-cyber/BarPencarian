@@ -803,202 +803,59 @@
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
+    <script>
+const baseUrl = "https://webinvit.id";
+const phoneNumber = "6281261233730";
 
-  const baseUrl = "https://webinvit.id";
-  const phoneNumber = "6281261233730";
+let nextPageUrl = baseUrl + "/seller/api/v1/products/websites?limit=12";
+let isLoading = false;
 
-  const categoryUrl = baseUrl + "/seller/api/v1/categories";
-  let nextPageUrl = baseUrl + "/seller/api/v1/products/websites?limit=12";
-  let isLoading = false;
-  let currentCategoryId = null;
-
-  let allThemes = [];
-
-  async function loadThemes(reset = false) {
-  isLoading = true;
-
+async function loadThemes() {
   const container = document.getElementById("themes");
   const btn = document.getElementById("loadMore");
+
   btn.textContent = "Loading...";
 
-  if (reset) {
-    container.innerHTML = "";
-    nextPageUrl = `${baseUrl}/seller/api/v1/products/websites?limit=12`;
-    if (currentCategoryId) {
-      nextPageUrl += `&categoryId=${currentCategoryId}`;
-    }
-  }
-
-  if (!nextPageUrl) {
-    isLoading = false;
-    btn.style.display = "none";
-    return;
-  }
-
   try {
-    } catch (error) {
-    const response = await fetch(nextPageUrl);
+    const res = await fetch(nextPageUrl);
+    const result = await res.json();
 
-    if (!response.ok) {
-      console.error("API ERROR:", response.status);
-      return;
-    }
+    const themes = result.data.data;
 
-    const result = await response.json();
-    const themes = result.data.data || [];
-
-    console.log("THEMES:", themes);
-
-    nextPageUrl = result.data.next_page_url || null;
-    if (nextPageUrl) nextPageUrl = nextPageUrl.replace("http:", "https:");
+    nextPageUrl = result.data.next_page_url;
 
     themes.forEach(function(theme) {
-  var card = document.createElement("div");
-  card.className = "theme-item";
+      var card = document.createElement("div");
 
-  var html = '';
+      var html = '';
+      html += '<div class="bg-card rounded shadow-lg">';
+      html += '<div class="aspect-square overflow-hidden">';
+      html += '<img src="' + theme.featured_image + '" class="w-full h-full object-cover">';
+      html += '</div>';
+      html += '<div class="p-3">';
+      html += '<h3 class="font-bold mb-2">' + theme.name + '</h3>';
+      html += '<div class="grid grid-cols-2 gap-2">';
+      html += '<a href="' + baseUrl + '/preview/' + theme.slug + '" target="_blank" class="bg-gray-200 text-center p-1 rounded">Preview</a>';
+      html += '<a href="https://wa.me/' + phoneNumber + '?text=Pesan+' + theme.name + '" target="_blank" class="bg-purple-500 text-white text-center p-1 rounded">Pesan</a>';
+      html += '</div>';
+      html += '</div>';
+      html += '</div>';
 
-  html += '<div class="bg-card rounded shadow-lg hover:shadow-2xl transition duration-300">';
-  html +=   '<div class="aspect-square rounded overflow-hidden">';
-  html +=     '<img src="' + theme.featured_image + '" class="size-full object-cover">';
-  html +=   '</div>';
-  html +=   '<div class="p-2 sm:p-4">';
-  html +=     '<h3 class="font-bold leading-tight mb-3">' + theme.name + '</h3>';
-  html +=     '<div class="grid gap-2 sm:grid-cols-2">';
-  html +=       '<a href="' + baseUrl + '/preview/' + theme.slug + '" target="_blank" class="btn text-sm rounded h-8 px-2 bg-secondary text-black">Preview</a>';
-  html +=       '<a href="https://wa.me/' + phoneNumber + '?text=Saya+mau+pesan+tema+' + theme.name + '" target="_blank" class="btn text-sm rounded h-8 px-2 bg-primary text-white">Pesan</a>';
-  html +=     '</div>';
-  html +=   '</div>';
-  html += '</div>';
-
-  card.innerHTML = html;
-  container.appendChild(card);
-});
-    if (!nextPageUrl) {
-      btn.style.display = "none";
-    }
-
-  try {
-} catch (error) {
-  console.error(error);
-}
-  } finally {
-    isLoading = false;
-    btn.textContent = "Load More Themes";
-  }
-}
-
-  // SEARCH (AMAN)
-  const searchInput = document.getElementById("searchInput");
-
-  if (searchInput) {
-    searchInput.addEventListener("keyup", function () {
-      const keyword = this.value.toLowerCase();
-      const items = document.querySelectorAll(".theme-item");
-      const loadMoreBtn = document.getElementById("loadMore");
-
-      if (keyword.length > 0) {
-        loadMoreBtn.style.display = "none";
-      } else {
-        loadMoreBtn.style.display = "inline-flex";
-      }
-
-      items.forEach((item) => {
-       document.getElementById("searchInput").addEventListener("keyup", function () {
-  const keyword = this.value.toLowerCase();
-  const items = document.querySelectorAll(".theme-item");
-  const loadMoreBtn = document.getElementById("loadMore");
-
-  if (keyword.length > 0) {
-    loadMoreBtn.style.display = "none";
-  } else {
-    loadMoreBtn.style.display = "inline-flex";
-  }
-
-  items.forEach((item) => {
-    const text = item.getAttribute("data-search");
-
-    const words = keyword.split(" ");
-    const match = words.every(word => text.includes(word));
-
-    if (match) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-});
-          item.style.display = "block";
-        } else {
-          item.style.display = "none";
-        }
-      });
+      card.innerHTML = html;
+      container.appendChild(card);
     });
+
+  } catch (err) {
+    console.log(err);
   }
 
-  document.getElementById("loadMore").addEventListener("click", () => loadThemes());
+  btn.textContent = "Load More Themes";
+}
 
-  async function loadCategories() {
-    const categoriesContainer = document.getElementById("categories");
+document.getElementById("loadMore").addEventListener("click", loadThemes);
 
-    try {
-      } catch (error) {
-      const response = await fetch(categoryUrl);
-      const result = await response.json();
-      const categories = result.data || [];
-
-      categories.forEach((category) => {
-        const buttonCategory = document.createElement("button");
-        buttonCategory.className =
-          "btn text-sm inline-flex items-center justify-center rounded h-8 px-2 bg-secondary m-1";
-        buttonCategory.textContent = category.name;
-
-        buttonCategory.addEventListener("click", () => {
-          currentCategoryId = category.id;
-          loadThemes(true);
-        });
-
-        categoriesContainer.appendChild(buttonCategory);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
-// SEARCH (TAMBAHKAN DI SINI)
-document.getElementById("searchInput").addEventListener("keyup", function () {
-  const keyword = this.value.toLowerCase().trim();
-  const items = document.querySelectorAll(".theme-item");
-  const loadMoreBtn = document.getElementById("loadMore");
-
-  if (keyword === "") {
-    items.forEach(item => item.style.display = "block");
-    loadMoreBtn.style.display = "inline-flex";
-    return;
-  }
-
-  loadMoreBtn.style.display = "none";
-
-  items.forEach((item) => {
-    const title = item.querySelector("h3").innerText.toLowerCase();
-    const text = title + " jawa javanese adat minang padang batak sunda modern elegan";
-
-    if (text.includes(keyword)) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-});
-
-// INIT (BIARKAN INI TETAP)
-loadCategories();
+// load pertama
 loadThemes();
-  // INIT
-  loadCategories();
-  loadThemes();
-
-});
-    </script>
+</script>
   </body>
 </html>
