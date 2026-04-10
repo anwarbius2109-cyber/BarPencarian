@@ -853,7 +853,6 @@
         // SEARCH FIX FINAL
 setTimeout(() => {
   const searchInput = document.getElementById("searchInput");
-
   if (!searchInput) return;
 
   searchInput.addEventListener("keyup", function () {
@@ -870,7 +869,10 @@ setTimeout(() => {
     loadMoreBtn.style.display = "none";
 
     items.forEach((item) => {
-      const title = item.querySelector("h3").innerText.toLowerCase();
+      const titleEl = item.querySelector("h3");
+      if (!titleEl) return;
+
+      const title = titleEl.innerText.toLowerCase();
 
       if (title.includes(keyword)) {
         item.style.display = "block";
@@ -879,6 +881,7 @@ setTimeout(() => {
       }
     });
   });
+}, 1500);
 
 }, 1000); // tunggu 1 detik biar tema sudah muncul
   const keyword = this.value.toLowerCase().trim();
