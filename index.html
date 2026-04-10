@@ -850,37 +850,37 @@
 
         const card = document.createElement("div");
         card.classList.add("theme-item");
-        document.addEventListener("DOMContentLoaded", function () {
-
+        // SEARCH FIX FINAL
+setTimeout(() => {
   const searchInput = document.getElementById("searchInput");
 
-  if (searchInput) {
-    searchInput.addEventListener("keyup", function () {
-      const keyword = this.value.toLowerCase().trim();
-      const items = document.querySelectorAll(".theme-item");
-      const loadMoreBtn = document.getElementById("loadMore");
+  if (!searchInput) return;
 
-      if (keyword === "") {
-        items.forEach(item => item.style.display = "block");
-        loadMoreBtn.style.display = "inline-flex";
-        return;
+  searchInput.addEventListener("keyup", function () {
+    const keyword = this.value.toLowerCase().trim();
+    const items = document.querySelectorAll(".theme-item");
+    const loadMoreBtn = document.getElementById("loadMore");
+
+    if (keyword === "") {
+      items.forEach(item => item.style.display = "block");
+      loadMoreBtn.style.display = "inline-flex";
+      return;
+    }
+
+    loadMoreBtn.style.display = "none";
+
+    items.forEach((item) => {
+      const title = item.querySelector("h3").innerText.toLowerCase();
+
+      if (title.includes(keyword)) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
       }
-
-      loadMoreBtn.style.display = "none";
-
-      items.forEach((item) => {
-        const title = item.querySelector("h3").innerText.toLowerCase();
-
-        if (title.includes(keyword)) {
-          item.style.display = "block";
-        } else {
-          item.style.display = "none";
-        }
-      });
     });
-  }
+  });
 
-});
+}, 1000); // tunggu 1 detik biar tema sudah muncul
   const keyword = this.value.toLowerCase().trim();
   const items = document.querySelectorAll(".theme-item");
   const loadMoreBtn = document.getElementById("loadMore");
